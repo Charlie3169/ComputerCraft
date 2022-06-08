@@ -88,7 +88,7 @@ end
 
 function moveVertically(n)
     if n<0 then
-        return moveDown(-n)
+        return -moveDown(-n)
     else
         return moveUp(n)
     end
@@ -122,10 +122,11 @@ function moveTo(X, Y, Z, x, y, z)
         thisLoopX = n_x
         thisLoopY = n_y
         thisLoopZ = n_z
-        print(thisLoopZ..","..thisLoopY)
+        print(thisLoopX..","..thisLoopY..","..thisLoopZ)
         
     
         if n_x ~= 0 then --trying to move in the x direction
+            isNegative = n_x < 0
             offset = 0
             if (currentDirectionIndex == TURTLE_DIRECTION_NEG_X and n_x > 0) or (currentDirectionIndex == TURTLE_DIRECTION_POS_X and n_x < 0) then
                 turtle.turnLeft()
@@ -139,10 +140,15 @@ function moveTo(X, Y, Z, x, y, z)
                 offset = 1         
             end
             currentDirectionIndex = (currentDirectionIndex + offset) % #(currentDirection)
-            n_x = move(n_x)
+            if isNegative then 
+                n_x = -move(-n_x) 
+            else
+                n_x = move(n_x)
+            end
         end
 
         if n_z ~= 0 then --trying to move in the z direction
+            isNegative = n_z < 0
             offset = 0
             if (currentDirectionIndex == TURTLE_DIRECTION_NEG_Z and n_z > 0) or (currentDirectionIndex == TURTLE_DIRECTION_POS_Z and n_z < 0) then
                 turtle.turnLeft()
@@ -156,7 +162,11 @@ function moveTo(X, Y, Z, x, y, z)
                 offset = 1            
             end
             currentDirectionIndex = (currentDirectionIndex + offset) % #(currentDirection)
-            n_z = move(n_z)
+            if isNegative then 
+                n_z = -move(-n_z) 
+            else
+                n_z = move(n_z)
+            end
         end
 
         if n_y ~= 0 then --trying to move in the y direction

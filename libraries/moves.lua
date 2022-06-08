@@ -15,6 +15,7 @@ TURTLE_DIRECTION_NEG_Z = 3
 COORDINATES_TRACKED = false
 MOVING_Y_AFTER_X_Z = false --Used when you want the robot to remain the same Y until X and Z are aligned
 ENABLE_MINING_FOR_MOVING = false
+ASSERT_NO_MINING_FOR_MOVING = false --Used when it absolutely shouldn't mine to escape
 
 SLEEP_SECS_FOR_MOVING = 5
 
@@ -177,7 +178,7 @@ function moveTo(X, Y, Z, x, y, z)
         if thisLoopX == n_x and thisLoopY == n_y and thisLoopZ == n_z then
             if not MOVING_Y_AFTER_X_Z then 
                 MOVING_Y_AFTER_X_Z = true
-            elseif not ENABLE_MINING_FOR_MOVING then 
+            elseif not ENABLE_MINING_FOR_MOVING and not ASSERT_NO_MINING_FOR_MOVING then 
                 ENABLE_MINING_FOR_MOVING = true
             else
                 ENABLE_MINING_FOR_MOVING = false

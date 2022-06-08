@@ -23,12 +23,11 @@ function homeZonePropogation(x, y, z, n_x, n_y, n_z, startFromMiddleX, startFrom
     X = x + n_x
     Y = y + n_y
     Z = z + n_z
-    x = min(newX, X)
-    y = min(newY, Y)
-    z = min(newZ, Z)
-    X = max(newX, X)
-    Y = max(newY, Y)
-    Z = max(newZ, Z)
+    x = math.min(newX, X)
+    y = math.min(newY, Y)
+    z = math.min(newZ, Z)
+    X = math.max(newX, X)
+    Y = math.max(newY, Y)
+    Z = math.max(newZ, Z)
     HOME_ZONE_COORDS = {x, y, z, X, Y, Z}
 end
-

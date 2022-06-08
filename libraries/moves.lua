@@ -121,9 +121,7 @@ function moveTo(X, Y, Z, x, y, z)
 
         thisLoopX = n_x
         thisLoopY = n_y
-        thisLoopZ = n_z
-        print(thisLoopX..","..thisLoopY..","..thisLoopZ)
-        
+        thisLoopZ = n_z        
     
         if n_x ~= 0 then --trying to move in the x direction
             isNegative = n_x < 0

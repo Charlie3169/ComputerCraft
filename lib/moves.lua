@@ -195,3 +195,4 @@ end
 
 function move(n_x, n_y, n_z)
     moveTo(n_x, n_y, n_z, 0, 0, 0)
+end

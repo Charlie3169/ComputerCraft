@@ -1,5 +1,5 @@
 require('configs')
-require('os')
+--require('os') -- this is automatically included on the turtles
 
 currentX = 0
 currentY = 0
@@ -122,28 +122,40 @@ function moveTo(X, Y, Z, x, y, z)
         thisLoopX = n_x
         thisLoopY = n_y
         thisLoopZ = n_z
+        print(thisLoopZ..","..thisLoopY)
+        
     
         if n_x ~= 0 then --trying to move in the x direction
-                if (currentDirectionIndex == TURTLE_DIRECTION_NEG_X and n_x > 0) or (currentDirectionIndex == TURTLE_DIRECTION_POS_X and n_x < 0) then
-                    turtle.turnLeft()
-                    turtle.turnLeft()
-                elseif (currentDirectionIndex == TURTLE_DIRECTION_POS_X and n_z < 0) or (currentDirectionIndex == TURTLE_DIRECTION_NEG_X and n_z > 0) then
-                    turtle.turnLeft()
-                elseif (currentDirectionIndex == TURTLE_DIRECTION_POS_X and n_z > 0) or (currentDirectionIndex == TURTLE_DIRECTION_NEG_X and n_z < 0) then
-                    turtle.turnRight()                
-                end
+            offset = 0
+            if (currentDirectionIndex == TURTLE_DIRECTION_NEG_X and n_x > 0) or (currentDirectionIndex == TURTLE_DIRECTION_POS_X and n_x < 0) then
+                turtle.turnLeft()
+                turtle.turnLeft()
+                offset = 2
+            elseif (currentDirectionIndex == TURTLE_DIRECTION_POS_Z and n_x > 0) or (currentDirectionIndex == TURTLE_DIRECTION_NEG_Z and n_x < 0) then
+                turtle.turnLeft()
+                offset = -1
+            elseif (currentDirectionIndex == TURTLE_DIRECTION_POS_Z and n_x < 0) or (currentDirectionIndex == TURTLE_DIRECTION_NEG_Z and n_x > 0) then
+                turtle.turnRight()
+                offset = 1         
+            end
+            currentDirectionIndex = (currentDirectionIndex + offset) % #(currentDirection)
             n_x = move(n_x)
         end
 
         if n_z ~= 0 then --trying to move in the z direction
+            offset = 0
             if (currentDirectionIndex == TURTLE_DIRECTION_NEG_Z and n_z > 0) or (currentDirectionIndex == TURTLE_DIRECTION_POS_Z and n_z < 0) then
                 turtle.turnLeft()
                 turtle.turnLeft()
-            elseif (currentDirectionIndex == TURTLE_DIRECTION_POS_X and n_z > 0) or (currentDirectionIndex == TURTLE_DIRECTION_NEG_Z and n_x < 0) then
+                offset = 2
+            elseif (currentDirectionIndex == TURTLE_DIRECTION_POS_X and n_z < 0) or (currentDirectionIndex == TURTLE_DIRECTION_NEG_X and n_z > 0) then
                 turtle.turnLeft()
-            elseif (currentDirectionIndex == TURTLE_DIRECTION_POS_Z and n_x < 0) or (currentDirectionIndex == TURTLE_DIRECTION_NEG_Z and n_x > 0) then
-                turtle.turnRight()                
+                offset = -1
+            elseif (currentDirectionIndex == TURTLE_DIRECTION_POS_X and n_z > 0) or (currentDirectionIndex == TURTLE_DIRECTION_NEG_X and n_z < 0) then
+                turtle.turnRight()
+                offset = 1            
             end
+            currentDirectionIndex = (currentDirectionIndex + offset) % #(currentDirection)
             n_z = move(n_z)
         end
 

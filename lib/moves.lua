@@ -151,10 +151,9 @@ function moveTo(X, Y, Z, x, y, z)
             offset = 0
             if (currentDirectionIndex == TURTLE_DIRECTION_NEG_Z and n_z > 0) or (currentDirectionIndex == TURTLE_DIRECTION_POS_Z and n_z < 0) then
                 turtle.turnLeft()
-                turtle.turnLeft()
-                offset = 2
-            elseif (currentDirectionIndex == TURTLE_DIRECTION_POS_X and n_z < 0) or (currentDirectionIndex == TURTLE_DIRECTION_NEG_X and n_z > 0) then
-                turtle.turnLeft()
+                turtle.turnLeft()    x = x~=nil and x or (COORDINATES_TRACKED and currentX or x)
+                y = y~=nil and y or (COORDINATES_TRACKED and currentY or y) 
+                z = z~=nil and z or (COORDINATES_TRACKED and currentZ or z)
                 offset = -1
             elseif (currentDirectionIndex == TURTLE_DIRECTION_POS_X and n_z > 0) or (currentDirectionIndex == TURTLE_DIRECTION_NEG_X and n_z < 0) then
                 turtle.turnRight()
@@ -196,5 +195,8 @@ end
 --- Moves a certain number of steps in each direction. 
 --- Designed to be able to be used without coordinates
 function moveSteps(n_x, n_y, n_z)
+    n_x = n_x or 0
+    n_y = n_y or 0
+    n_z = n_z or 0
     moveTo(n_x, n_y, n_z, 0, 0, 0)
 end

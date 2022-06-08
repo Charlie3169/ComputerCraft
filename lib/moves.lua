@@ -193,6 +193,8 @@ function moveTo(X, Y, Z, x, y, z)
 
 end
 
-function move(n_x, n_y, n_z)
+--- Moves a certain number of steps in each direction. 
+--- Designed to be able to be used without coordinates
+function moveSteps(n_x, n_y, n_z)
     moveTo(n_x, n_y, n_z, 0, 0, 0)
 end

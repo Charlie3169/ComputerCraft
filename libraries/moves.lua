@@ -249,7 +249,7 @@ function getCurrentCoordinates()
 end
 
 
-
+--Probably move this out of here eventually
 function returnToRefuelStation()
     -- Given the location(s) of a known fuel statiosn, calculate xyz diff from the current location to each one and take the minimum
     -- This would return back an absolute minimum amount of fuel needed under perfect circumstances

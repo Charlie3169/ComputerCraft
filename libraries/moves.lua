@@ -14,7 +14,10 @@ TURTLE_DIRECTION_NEG_X = 2 --West
 TURTLE_DIRECTION_NEG_Z = 3 --North
 
 
-COORDINATES_TRACKED = false
+COORDINATES_TRACKED = false 
+-- Honestly we might as well always at least track coords relative to the starting position
+-- Once we get GPS going we can just correctly initialize them
+
 MOVING_Y_AFTER_X_Z = false --Used when you want the robot to remain the same Y until X and Z are aligned
 ENABLE_MINING_FOR_MOVING = false
 ASSERT_NO_MINING_FOR_MOVING = false --Used when it absolutely shouldn't mine to escape
@@ -107,7 +110,7 @@ end
 -- @param (optional) x: starting x coordinate
 -- @param (optional) y: starting y coordinate
 -- @param (optional) z: starting z coordinate
-function moveTo(X, Y, Z, x, y, z)
+function moveTo(X, Y, Z, x, y, z), x, y, z)
     x = x~=nil and x or (COORDINATES_TRACKED and currentX or x)
     y = y~=nil and y or (COORDINATES_TRACKED and currentY or y) 
     z = z~=nil and z or (COORDINATES_TRACKED and currentZ or z)
@@ -195,14 +198,9 @@ function moveTo(X, Y, Z, x, y, z)
 
 end
 
-function getCurrentCoordinates()
-    --getCoords using a call to the central satellite 
-    --set current X Y and Z
 
-end
-
--- functions that add on to the existing movement functionality
--- 
+-- Functions that add on to the existing movement functionality
+-- We should start using these in place of the default ones
 function enhancedLeft()
 
     turtle.turnLeft()
@@ -244,8 +242,22 @@ function enhancedBack()
     end   
 end
 
+function getCurrentCoordinates()
+    --getCoords using a call to the central satellite 
+    --set current X Y and Z
+
+end
 
 
+
+function returnToRefuelStation()
+    -- Given the location(s) of a known fuel statiosn, calculate xyz diff from the current location to each one and take the minimum
+    -- This would return back an absolute minimum amount of fuel needed under perfect circumstances
+    local distanceFromStation = 100
+    if(distanceFromStation * 2 > turtle.getFuelLevel()) then
+        moveTo(X, Y, Z)
+    end
+end
 
 
 

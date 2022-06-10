@@ -6,7 +6,7 @@ Grabbing a GIT repo from a Turtle:
 
 2nd: github clone \<user\>\/\<repo\> \[-b \<branchname\> \| -t \<tagname\>\] \[\<destination\>\] \[-a \<username\>\] 
 
-Example:github clone Charlie3169/ComputerCraft -b main
+Example: github clone Charlie3169/ComputerCraft -b main
 
 ## Useful Links
 

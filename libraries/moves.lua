@@ -7,10 +7,12 @@ currentZ = 0
 currentDirection = {"+Z", "-X", "-Z", "+X"} --Idx 1,2,3,4
 currentDirectionIndex = 0
 
-TURTLE_DIRECTION_POS_X = 4
-TURTLE_DIRECTION_POS_Z = 1
-TURTLE_DIRECTION_NEG_X = 2
-TURTLE_DIRECTION_NEG_Z = 3 
+--Make this go 1 2 3 4 if you can
+TURTLE_DIRECTION_POS_X = 4 --East
+TURTLE_DIRECTION_POS_Z = 1 --South
+TURTLE_DIRECTION_NEG_X = 2 --West
+TURTLE_DIRECTION_NEG_Z = 3 --North
+
 
 COORDINATES_TRACKED = false
 MOVING_Y_AFTER_X_Z = false --Used when you want the robot to remain the same Y until X and Z are aligned
@@ -192,4 +194,58 @@ function moveTo(X, Y, Z, x, y, z)
     end
 
 end
+
+function getCurrentCoordinates()
+    --getCoords using a call to the central satellite 
+    --set current X Y and Z
+
+end
+
+-- functions that add on to the existing movement functionality
+-- 
+function enhancedLeft()
+
+    turtle.turnLeft()
+    if direction ~= 1 then
+        direction = direction - 1
+    else
+        direction = 4
+    end
+end
+
+function enhancedRight()
+
+    turtle.turnRight()
+    if direction ~= 4 then
+        direction = direction + 1
+    else
+        direction = 1 
+    end    
+end
+
+
+function enhancedForward()
+    if turtle.forward() then
+        if direction == 4 then currentX = currentX + 1        
+        elseif direction == 1 then currentZ = currentZ + 1
+        elseif direction == 2 then currentX = currentX - 1
+        elseif direction == 3 then currentZ = currentZ - 1
+        end   
+    end   
+end
+
+function enhancedBack()
+    if turtle.back() then
+        if direction == 4 then currentX = currentX - 1        
+        elseif direction == 1 then currentZ = currentZ - 1
+        elseif direction == 2 then currentX = currentX + 1
+        elseif direction == 3 then currentZ = currentZ + 1
+        end   
+    end   
+end
+
+
+
+
+
 

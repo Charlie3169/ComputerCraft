@@ -3,9 +3,10 @@
 Grabbing a GIT repo from a Turtle:
 
 1st: pastebin run p8PJVxC4
+
 2nd: github clone \<user\>\/\<repo\> \[-b \<branchname\> \| -t \<tagname\>\] \[\<destination\>\] \[-a \<username\>\] 
-Example:
-github clone Charlie3169/ComputerCraft -b main
+
+Example:github clone Charlie3169/ComputerCraft -b main
 
 ## Useful Links
 

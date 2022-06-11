@@ -1,5 +1,3 @@
-
-
 homeX = 449
 homeY = 74
 homeZ = -1238
@@ -25,7 +23,7 @@ cycle = 0 --Counter for number of cycles completed
 
 --Blocks that the roomba should detect
 TableOfNames = {}
-TableOfNames["MineFactoryReloaded:rubberwood.sablankpling"] = 1
+TableOfNames["MineFactoryReloaded:rubberwood.sapling"] = 1
 TableOfNames["MineFactoryReloaded:rubberwood.log"] = 1
 TableOfNames["minecraft:log"] = 1
 TableOfNames["minecraft:sapling"] = 1

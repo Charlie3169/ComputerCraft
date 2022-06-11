@@ -1,4 +1,5 @@
 require("moves")
+require("statusUpdates")
 
 --- Mines a straight line in the current direction
 -- @param length number of blocks to mine
@@ -21,7 +22,7 @@ function digLine(length, doMineUp, doMineDown)
             blocksMined[1], blocksMined[4] = blocksMined[1] + 1, blocksMined[4] + 1  
         end
         while not turtle.forward() do
-            if not turtle.attack() and not turtle.detect() and not turtle.dig() then
+            if not turtle.attack() and turtle.detect() and not turtle.dig() then
                 sleep(0.5)
             end
         end
@@ -37,9 +38,13 @@ end
 -- @param n_y number of blocks in the y direction to mine
 -- @param n_z number of blocks in the z direction to mine
 -- @param offset_y number of blocks to go in the y direction before starting
-function digArea(n_x, n_y, n_z, offset_y)
+function digArea(n_x, n_y, n_z, offset_y, goToStartForInterrupts)
+    offset_y = offset_y~=nil and offset_y or 0
+    --Automatically go to job start before going to refuel/unload
+    goToStartForInterrupts = goToStartForInterrupts~=nil and goToStartForInterrupts or true
     ENABLE_MINING_FOR_MOVING = true --Set this to true to make the turtle mine for this function only
     assert(moveVertically(offset_y) == 0, "Did not move all the way vertically.")
+    jobStart = {currentX, currentY - offset_y, currentZ}
     local move_x = n_x --These variables necessary to keep track of these between layers
     local move_y = n_y
     local move_z = n_z 
@@ -51,6 +56,7 @@ function digArea(n_x, n_y, n_z, offset_y)
             moveSteps(0, 0, move_z / math.abs(move_z)) --moves 1 unit in the correct z direction
             move_x = -move_x
             move_z = move_z < 0 and move_z + 1 or move_z - 1
+            handleInterrupts()
         end
         moveSteps(move_x, 0, 0)
         move_x = -move_x
@@ -67,8 +73,31 @@ function digArea(n_x, n_y, n_z, offset_y)
     ENABLE_MINING_FOR_MOVING = false
 end
 
-            
-    
+
+--- Function to handle interrupts
+--- For now, just handle out of fuel events and inventory full events
+function handleInterrupts()
+    local invenFull = isInventoryFull()
+    local outOfFuel = needsFuel()
+    if invenFull or outOfFuel then
+        ENABLE_MINING_FOR_MOVING = false
+        jobInterrupt = {currentX, currentY, currentZ}
+        moveTo(jobStart)
+        if invenFull then 
+            returnToUnloadingStation()
+            unloadAll()
+        end
+        if outOfFuel then
+            returnToRefuelStation()
+            refuelToHalf()
+        end
+        moveTo(jobStart)
+        moveVertically(offset_y)
+        moveTo(jobInterrupt)
+        ENABLE_MINING_FOR_MOVING = true
+    end
+end
+
 
 
 

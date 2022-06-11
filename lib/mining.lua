@@ -64,6 +64,7 @@ function digArea(n_x, n_y, n_z, offset_y)
         --The move_x variable will be correct at this point, so just reverse the z
         move_z = math.pow(-1, (n_y - move_y) % 2) * n_z --Reversing it every y layer
     end
+    ENABLE_MINING_FOR_MOVING = false
 end
 
             

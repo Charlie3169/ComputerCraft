@@ -1,3 +1,5 @@
+require("moves")
+
 --- Mines a straight line in the current direction
 -- @param length number of blocks to mine
 -- @param doMineUp (optional) mines above while traversing
@@ -26,6 +28,21 @@ function digLine(length, doMineUp, doMineDown)
     end
     return blocksMined
 end
+
+--- Mines out an area, starting at a coordinate
+-- @param n_x number of blocks in the x direction to mine
+-- @param n_y number of blocks in the y direction to mine
+-- @param n_z number of blocks in the z direction to mine
+-- @param offset_y number of blocks to go in the y direction before starting
+function digArea(n_x, n_y, n_z, offset_y)
+    ENABLE_MINING_FOR_MOVING = true --Set this to true to make the turtle mine for this function only
+    assert(moveVertically(offset_y) == 0, "Did not move all the way vertically.")
+    while n_y > 0 do
+        while n_z > 0 do
+            move(n_x)
+    
+
+
 
 
         

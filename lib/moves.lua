@@ -20,9 +20,25 @@ ASSERT_NO_MINING_FOR_MOVING = false --Used when it absolutely shouldn't mine to 
 SLEEP_SECS_FOR_MOVING = 5
 
 
-function move(n) --moves n units forward
+function isFacingX()
+    return currentDirectionIndex % 2 == 0
+end
+
+
+function isFacingZ()
+    return currentDirectionIndex % 2 == 1
+end
+
+
+
+-- moves n units forward
+-- Ensures n is positive. If n is negative, return the difference as a negative.
+-- (i.e. if n is 3 and it moves 2, return -1)
+function move(n) 
 	finishedSleep = false
     stepsTaken = 0
+    isNegative = n < 0
+    n = math.abs(n)
 	for i=1,n,1 do
         moved = turtle.forward()
 
@@ -39,7 +55,7 @@ function move(n) --moves n units forward
 
         if moved then stepsTaken = stepsTaken + 1 end
 	end
-    return n-stepsTaken
+    return isNegative and -(n-stepsTaken) or (n-stepsTaken)
 end
 
 
@@ -99,6 +115,8 @@ end
 --- Move to X,Y,Z from x,y,z
 --- If x,y,z are not included, use coordinates that are tracked. 
 --- If coordinates not tracked, throw an error.
+--- If ENABLE_MINING_FOR_MOVING is true, the turtle will mine in front of it to move
+--- * This makes it very easy to mine out an area using this function.
 -- @param X: target x coordinate
 -- @param Y: target y coordinate
 -- @param Z: target z coordinate
@@ -125,7 +143,6 @@ function moveTo(X, Y, Z, x, y, z)
         thisLoopZ = n_z        
     
         if n_x ~= 0 then --trying to move in the x direction
-            isNegative = n_x < 0
             offset = 0
             if (currentDirectionIndex == TURTLE_DIRECTION_NEG_X and n_x > 0) or (currentDirectionIndex == TURTLE_DIRECTION_POS_X and n_x < 0) then
                 turtle.turnLeft()
@@ -139,32 +156,24 @@ function moveTo(X, Y, Z, x, y, z)
                 offset = 1         
             end
             currentDirectionIndex = (currentDirectionIndex + offset) % #(currentDirection)
-            if isNegative then 
-                n_x = -move(-n_x) 
-            else
-                n_x = move(n_x)
-            end
+            n_x = move(n_x)
         end
 
         if n_z ~= 0 then --trying to move in the z direction
-            isNegative = n_z < 0
             offset = 0
             if (currentDirectionIndex == TURTLE_DIRECTION_NEG_Z and n_z > 0) or (currentDirectionIndex == TURTLE_DIRECTION_POS_Z and n_z < 0) then
                 turtle.turnLeft()
-                turtle.turnLeft()    x = x~=nil and x or (COORDINATES_TRACKED and currentX or x)
-                y = y~=nil and y or (COORDINATES_TRACKED and currentY or y) 
-                z = z~=nil and z or (COORDINATES_TRACKED and currentZ or z)
+                turtle.turnLeft()    
+                offset = 2
+            elseif (currentDirectionIndex == TURTLE_DIRECTION_POS_X and n_z < 0) or (currentDirectionIndex == TURTLE_DIRECTION_NEG_X and n_z > 0) then
+                turtle.turnLeft()
                 offset = -1
             elseif (currentDirectionIndex == TURTLE_DIRECTION_POS_X and n_z > 0) or (currentDirectionIndex == TURTLE_DIRECTION_NEG_X and n_z < 0) then
                 turtle.turnRight()
                 offset = 1            
             end
             currentDirectionIndex = (currentDirectionIndex + offset) % #(currentDirection)
-            if isNegative then 
-                n_z = -move(-n_z) 
-            else
-                n_z = move(n_z)
-            end
+            n_z = move(n_z)
         end
 
         if n_y ~= 0 then --trying to move in the y direction

@@ -1,11 +1,9 @@
 function mineGeneratedCobble()
-    local sleepTime = 1
-    local hasFuel = true
+    local sleepTime = 1    
 
-    while(hasFuel) do
+    while(true) do
         turtle.dig()
-        --os.sleep(sleepTime)
-        print('Fuel Level' .. turtle.getFuelLevel())
+        --os.sleep(sleepTime)        
     end
 end
 

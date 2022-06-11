@@ -13,6 +13,10 @@ TURTLE_DIRECTION_POS_Z = 1 --South
 TURTLE_DIRECTION_NEG_X = 2 --West
 TURTLE_DIRECTION_NEG_Z = 3 --North
 
+--Whenever the turtle starts a job, make this the coordinates to go to 
+jobStart = {0,0,0}
+--Whenever the turtle's job is interrupted, make this the coordinates to go back to
+jobInterrupt = {0,0,0} 
 
 COORDINATES_TRACKED = false 
 -- Honestly we might as well always at least track coords relative to the starting position
@@ -271,19 +275,20 @@ end
 function getCurrentCoordinates()
     --getCoords using a call to the central satellite 
     --set current X Y and Z
-
 end
 
 
---Probably move this out of here eventually
-function returnToRefuelStation()
-    -- Given the location(s) of a known fuel statiosn, calculate xyz diff from the current location to each one and take the minimum
-    -- This would return back an absolute minimum amount of fuel needed under perfect circumstances
-    local distanceFromStation = 100
-    if(distanceFromStation * 2 > turtle.getFuelLevel()) then
-        moveTo(X, Y, Z)
+function returnToUnloadingStation()
+    moveTo(UNLOADING_STATION_COORDS)
+end
+
+
+function distanceInBlocks(x,y,z,X,Y,Z)
+    if X==nil or Y==nil or Z==nil then
+        X,Y,Z = currentX, currentY, currentZ
     end
+    assert(x~=nil and y~=nil and z~=nil, "Needs all coordinates of where it wants to calculate in distanceInBlocks()")
+    --Turtles can't move diagonally, so just calculate the sum of the differences
+    return math.abs(X-x) + math.abs(Y-y) + math.abs(Z-z)
 end
-
-
-
+        

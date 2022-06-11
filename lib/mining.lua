@@ -54,8 +54,8 @@ function digArea(n_x, n_y, n_z, offset_y)
         end
         moveSteps(move_x, 0, 0)
         move_x = -move_x
-        if n_y ~= 0 then 
-            moveSteps(0, n_y / math.abs(n_y), 0) --moves 1 unit in the correct y direction
+        if move_y ~= 0 then 
+            moveSteps(0, move_y / math.abs(move_y), 0) --moves 1 unit in the correct y direction
             move_y = move_y < 0 and move_y + 1 or move_y - 1
         else
             keepMining = false

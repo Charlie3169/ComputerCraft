@@ -1,3 +1,5 @@
+
+
 homeX = 449
 homeY = 74
 homeZ = -1238
@@ -23,7 +25,7 @@ cycle = 0 --Counter for number of cycles completed
 
 --Blocks that the roomba should detect
 TableOfNames = {}
-TableOfNames["MineFactoryReloaded:rubberwood.sapling"] = 1
+TableOfNames["MineFactoryReloaded:rubberwood.sablankpling"] = 1
 TableOfNames["MineFactoryReloaded:rubberwood.log"] = 1
 TableOfNames["minecraft:log"] = 1
 TableOfNames["minecraft:sapling"] = 1
@@ -34,38 +36,6 @@ saplingTable = {}
 saplingTable["MineFactoryReloaded:rubberwood.sapling"] = 1
 saplingTable["minecraft:sapling"] = 1
 
-function move(n) --moves n units forward
-	for i=1,n,1 do
-		while not turtle.forward() do
-			bool,x = turtle.inspect()
-			if turtle.detect() and TableOfNames[x["name"]] then
-				turtle.dig()
-			end
-		end
-	end
-end
-
-function moveDown(n)
-	for i=1,n,1 do
-		while not turtle.down() do
-			bool,x = turtle.inspectDown()
-			if turtle.detectDown() and TableOfNames[x["name"]] then
-				turtle.digDown()
-			end
-		end
-	end
-end
-
-function moveUp(n)
-	for i=1,n,1 do
-		while not turtle.up() do
-			bool,x = turtle.inspectUp()
-			if turtle.detectUp() and TableOfNames[x["name"]] then
-				turtle.digUp()
-			end
-		end
-	end
-end
 
 --Assuming starting from goal+4 (at the turtle return point) facing +X, ends facing -X
 function moveToHome()

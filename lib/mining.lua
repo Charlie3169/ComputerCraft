@@ -29,7 +29,10 @@ function digLine(length, doMineUp, doMineDown)
     return blocksMined
 end
 
---- Mines out an area, starting at a coordinate
+
+--- Mines out an area, starting at a corner.
+--- Mines in rows in the x direction, travels z direction and then y direction. 
+--- TODO: Checks if the inventory is full or if the turtle needs refueling after every x row 
 -- @param n_x number of blocks in the x direction to mine
 -- @param n_y number of blocks in the y direction to mine
 -- @param n_z number of blocks in the z direction to mine
@@ -37,9 +40,33 @@ end
 function digArea(n_x, n_y, n_z, offset_y)
     ENABLE_MINING_FOR_MOVING = true --Set this to true to make the turtle mine for this function only
     assert(moveVertically(offset_y) == 0, "Did not move all the way vertically.")
-    while n_y > 0 do
-        while n_z > 0 do
-            move(n_x)
+    local move_x = n_x --These variables necessary to keep track of these between layers
+    local move_y = n_y
+    local move_z = n_z 
+    local keepMining = true --Keep mining until n_y == 0
+
+    while keepMining do
+        while move_z ~= 0 do --This loop will do every row except one, so make it move in the x again
+            moveSteps(move_x, 0, 0)
+            moveSteps(0, 0, move_z / math.abs(move_z)) --moves 1 unit in the correct z direction
+            move_x = -move_x
+            move_z = move_z < 0 and move_z + 1 or move_z - 1
+        end
+        moveSteps(move_x, 0, 0)
+        move_x = -move_x
+        if n_y ~= 0 then 
+            moveSteps(0, n_y / math.abs(n_y), 0) --moves 1 unit in the correct y direction
+            move_y = move_y < 0 and move_y + 1 or move_y - 1
+        else
+            keepMining = false
+        end
+        --At this point, the turtle will be in the opposite corner that it started from.
+        --The move_x variable will be correct at this point, so just reverse the z
+        move_z = -n_z
+    end
+end
+
+            
     
 
 

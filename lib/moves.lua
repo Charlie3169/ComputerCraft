@@ -45,7 +45,7 @@ function move(n)
     isNegative = n < 0
     n = math.abs(n)
 	for i=1,n,1 do
-        moved = turtle.forward()
+        moved = enhancedForward()
 
 		while not moved and not finishedSleep do
 			bool,x = turtle.inspect()
@@ -55,7 +55,7 @@ function move(n)
                 finishedSleep = true
                 os.sleep(SLEEP_SECS_FOR_MOVING)
             end
-            moved = turtle.forward()
+            moved = enhancedForward()
 		end
 
         if moved then stepsTaken = stepsTaken + 1 end
@@ -68,7 +68,7 @@ function moveDown(n)
     finishedSleep = false
     stepsTaken = 0
 	for i=1,n,1 do
-        moved = turtle.down()
+        moved = enhancedDown()
 		while not moved and not finishedSleep do
 			bool,x = turtle.inspectDown()
 			if turtle.detectDown() and ENABLE_MINING_FOR_MOVING then
@@ -77,7 +77,7 @@ function moveDown(n)
                 finishedSleep = true
                 os.sleep(SLEEP_SECS_FOR_MOVING)
             end
-            moved = turtle.down()
+            moved = enhancedDown()
 		end
 
         if moved then stepsTaken = stepsTaken + 1 end
@@ -90,7 +90,7 @@ function moveUp(n)
 	finishedSleep = false
     stepsTaken = 0
 	for i=1,n,1 do
-        moved = turtle.up()
+        moved = enhancedUp()
 		while not moved and not finishedSleep do
 			bool,x = turtle.inspectUp()
 			if turtle.detectUp() and ENABLE_MINING_FOR_MOVING then
@@ -99,7 +99,7 @@ function moveUp(n)
                 finishedSleep = true
                 os.sleep(SLEEP_SECS_FOR_MOVING)
             end
-            moved = turtle.up()
+            moved = enhancedUp()
 		end
 
         if moved then stepsTaken = stepsTaken + 1 end
@@ -128,7 +128,7 @@ end
 -- @param (optional) x: starting x coordinate
 -- @param (optional) y: starting y coordinate
 -- @param (optional) z: starting z coordinate
-function moveTo(X, Y, Z, x, y, z), x, y, z)
+function moveTo(X, Y, Z, x, y, z)
     x = x~=nil and x or (COORDINATES_TRACKED and currentX or x)
     y = y~=nil and y or (COORDINATES_TRACKED and currentY or y) 
     z = z~=nil and z or (COORDINATES_TRACKED and currentZ or z)
@@ -148,36 +148,27 @@ function moveTo(X, Y, Z, x, y, z), x, y, z)
         thisLoopZ = n_z        
     
         if n_x ~= 0 then --trying to move in the x direction
-            offset = 0
             if (currentDirectionIndex == TURTLE_DIRECTION_NEG_X and n_x > 0) or (currentDirectionIndex == TURTLE_DIRECTION_POS_X and n_x < 0) then
-                turtle.turnLeft()
-                turtle.turnLeft()
-                offset = 2
+                enhancedLeft()
+                enhancedLeft()
             elseif (currentDirectionIndex == TURTLE_DIRECTION_POS_Z and n_x > 0) or (currentDirectionIndex == TURTLE_DIRECTION_NEG_Z and n_x < 0) then
-                turtle.turnLeft()
-                offset = -1
+                enhancedLeft()
             elseif (currentDirectionIndex == TURTLE_DIRECTION_POS_Z and n_x < 0) or (currentDirectionIndex == TURTLE_DIRECTION_NEG_Z and n_x > 0) then
-                turtle.turnRight()
-                offset = 1         
+                enhancedRight()       
             end
-            currentDirectionIndex = (currentDirectionIndex + offset) % #(currentDirection)
             n_x = move(n_x)
         end
 
         if n_z ~= 0 then --trying to move in the z direction
             offset = 0
             if (currentDirectionIndex == TURTLE_DIRECTION_NEG_Z and n_z > 0) or (currentDirectionIndex == TURTLE_DIRECTION_POS_Z and n_z < 0) then
-                turtle.turnLeft()
-                turtle.turnLeft()    
-                offset = 2
+                enhancedLeft()
+                enhancedLeft()    
             elseif (currentDirectionIndex == TURTLE_DIRECTION_POS_X and n_z < 0) or (currentDirectionIndex == TURTLE_DIRECTION_NEG_X and n_z > 0) then
-                turtle.turnLeft()
-                offset = -1
+                enhancedLeft()
             elseif (currentDirectionIndex == TURTLE_DIRECTION_POS_X and n_z > 0) or (currentDirectionIndex == TURTLE_DIRECTION_NEG_X and n_z < 0) then
-                turtle.turnRight()
-                offset = 1            
+                enhancedRight()          
             end
-            currentDirectionIndex = (currentDirectionIndex + offset) % #(currentDirection)
             n_z = move(n_z)
         end
 
@@ -218,44 +209,63 @@ end
 -- Functions that add on to the existing movement functionality
 -- We should start using these in place of the default ones
 function enhancedLeft()
-
-    turtle.turnLeft()
-    if direction ~= 1 then
-        direction = direction - 1
+    local worked = turtle.turnLeft()
+    if currentDirectionIndex ~= 1 then
+        currentDirectionIndex = currentDirectionIndex - 1
     else
-        direction = 4
+        currentDirectionIndex = 4
     end
+    return worked
 end
 
 function enhancedRight()
-
-    turtle.turnRight()
-    if direction ~= 4 then
-        direction = direction + 1
+    local worked = turtle.turnRight()
+    if currentDirectionIndex ~= 4 then
+        currentDirectionIndex = currentDirectionIndex + 1
     else
-        direction = 1 
+        currentDirectionIndex = 1 
     end    
+    return worked
 end
 
-
 function enhancedForward()
-    if turtle.forward() then
-        if direction == 4 then currentX = currentX + 1        
-        elseif direction == 1 then currentZ = currentZ + 1
-        elseif direction == 2 then currentX = currentX - 1
-        elseif direction == 3 then currentZ = currentZ - 1
+    local worked = turtle.forward()
+    if worked then
+        if currentDirectionIndex == TURTLE_DIRECTION_POS_X then currentX = currentX + 1        
+        elseif currentDirectionIndex == TURTLE_DIRECTION_POS_Z then currentZ = currentZ + 1
+        elseif currentDirectionIndex == TURTLE_DIRECTION_NEG_X then currentX = currentX - 1
+        elseif currentDirectionIndex == TURTLE_DIRECTION_NEG_Z then currentZ = currentZ - 1
         end   
-    end   
+    end
+    return worked   
 end
 
 function enhancedBack()
-    if turtle.back() then
-        if direction == 4 then currentX = currentX - 1        
-        elseif direction == 1 then currentZ = currentZ - 1
-        elseif direction == 2 then currentX = currentX + 1
-        elseif direction == 3 then currentZ = currentZ + 1
+    local worked = turtle.back()
+    if worked then
+        if currentDirectionIndex == TURTLE_DIRECTION_POS_X then currentX = currentX - 1        
+        elseif currentDirectionIndex == TURTLE_DIRECTION_POS_Z then currentZ = currentZ - 1
+        elseif currentDirectionIndex == TURTLE_DIRECTION_NEG_X then currentX = currentX + 1
+        elseif currentDirectionIndex == TURTLE_DIRECTION_NEG_Z then currentZ = currentZ + 1
         end   
     end   
+    return worked
+end
+
+function enhancedUp()
+    local worked = turtle.up()
+    if worked then
+        currentY = currentY + 1 
+    end
+    return worked   
+end
+
+function enhancedDown()
+    local worked = turtle.down()
+    if worked then
+        currentY = currentY - 1
+    end
+    return worked   
 end
 
 function getCurrentCoordinates()

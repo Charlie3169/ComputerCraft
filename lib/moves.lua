@@ -7,12 +7,17 @@ currentZ = 0
 currentDirection = {"+Z", "-X", "-Z", "+X"} --Idx 1,2,3,4
 currentDirectionIndex = 0
 
-TURTLE_DIRECTION_POS_X = 4
-TURTLE_DIRECTION_POS_Z = 1
-TURTLE_DIRECTION_NEG_X = 2
-TURTLE_DIRECTION_NEG_Z = 3 
+--Make this go 1 2 3 4 if you can
+TURTLE_DIRECTION_POS_X = 4 --East
+TURTLE_DIRECTION_POS_Z = 1 --South
+TURTLE_DIRECTION_NEG_X = 2 --West
+TURTLE_DIRECTION_NEG_Z = 3 --North
 
-COORDINATES_TRACKED = false
+
+COORDINATES_TRACKED = false 
+-- Honestly we might as well always at least track coords relative to the starting position
+-- Once we get GPS going we can just correctly initialize them
+
 MOVING_Y_AFTER_X_Z = false --Used when you want the robot to remain the same Y until X and Z are aligned
 ENABLE_MINING_FOR_MOVING = false
 ASSERT_NO_MINING_FOR_MOVING = false --Used when it absolutely shouldn't mine to escape
@@ -123,7 +128,7 @@ end
 -- @param (optional) x: starting x coordinate
 -- @param (optional) y: starting y coordinate
 -- @param (optional) z: starting z coordinate
-function moveTo(X, Y, Z, x, y, z)
+function moveTo(X, Y, Z, x, y, z), x, y, z)
     x = x~=nil and x or (COORDINATES_TRACKED and currentX or x)
     y = y~=nil and y or (COORDINATES_TRACKED and currentY or y) 
     z = z~=nil and z or (COORDINATES_TRACKED and currentZ or z)
@@ -209,3 +214,66 @@ function moveSteps(n_x, n_y, n_z)
     n_z = n_z or 0
     moveTo(n_x, n_y, n_z, 0, 0, 0)
 end
+
+-- Functions that add on to the existing movement functionality
+-- We should start using these in place of the default ones
+function enhancedLeft()
+
+    turtle.turnLeft()
+    if direction ~= 1 then
+        direction = direction - 1
+    else
+        direction = 4
+    end
+end
+
+function enhancedRight()
+
+    turtle.turnRight()
+    if direction ~= 4 then
+        direction = direction + 1
+    else
+        direction = 1 
+    end    
+end
+
+
+function enhancedForward()
+    if turtle.forward() then
+        if direction == 4 then currentX = currentX + 1        
+        elseif direction == 1 then currentZ = currentZ + 1
+        elseif direction == 2 then currentX = currentX - 1
+        elseif direction == 3 then currentZ = currentZ - 1
+        end   
+    end   
+end
+
+function enhancedBack()
+    if turtle.back() then
+        if direction == 4 then currentX = currentX - 1        
+        elseif direction == 1 then currentZ = currentZ - 1
+        elseif direction == 2 then currentX = currentX + 1
+        elseif direction == 3 then currentZ = currentZ + 1
+        end   
+    end   
+end
+
+function getCurrentCoordinates()
+    --getCoords using a call to the central satellite 
+    --set current X Y and Z
+
+end
+
+
+--Probably move this out of here eventually
+function returnToRefuelStation()
+    -- Given the location(s) of a known fuel statiosn, calculate xyz diff from the current location to each one and take the minimum
+    -- This would return back an absolute minimum amount of fuel needed under perfect circumstances
+    local distanceFromStation = 100
+    if(distanceFromStation * 2 > turtle.getFuelLevel()) then
+        moveTo(X, Y, Z)
+    end
+end
+
+
+

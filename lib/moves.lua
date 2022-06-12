@@ -126,12 +126,12 @@ end
 --- If coordinates not tracked, throw an error.
 --- If ENABLE_MINING_FOR_MOVING is true, the turtle will mine in front of it to move
 --- * This makes it very easy to mine out an area using this function.
--- @param X: target x coordinate
--- @param Y: target y coordinate
--- @param Z: target z coordinate
--- @param (optional) x: starting x coordinate
--- @param (optional) y: starting y coordinate
--- @param (optional) z: starting z coordinate
+--- @param X: target x coordinate
+--- @param Y: target y coordinate
+--- @param Z: target z coordinate
+--- @param (optional) x: starting x coordinate
+--- @param (optional) y: starting y coordinate
+--- @param (optional) z: starting z coordinate
 function moveTo(X, Y, Z, x, y, z)
     x = x~=nil and x or (COORDINATES_TRACKED and currentX or x)
     y = y~=nil and y or (COORDINATES_TRACKED and currentY or y) 
@@ -259,7 +259,7 @@ function enhancedDown()
     return worked   
 end
 
---Turns to direction. Should use the constants defined at the top.
+---Turns to direction. Should use the constants defined at the top.
 function turnTo(direction)
     local diff = direction - currentDirectionIndex
     if diff == -3 then enhancedRight()
@@ -283,18 +283,20 @@ function getCurrentCoordinates()
 end
 
 
--- @param direction direction to look to unload.
+--- @param direction direction to look to unload.
 function returnToUnloadingStation(direction)
     local worked = true
+    direction = direction or UNLOADING_STATION_COORDS[4]
     worked = worked and moveTo(UNLOADING_STATION_COORDS[1],UNLOADING_STATION_COORDS[2],UNLOADING_STATION_COORDS[3])
     worked = worked and turnTo(direction)
     return worked
 end
 
 
--- @param direction direction to look to refuel.
+--- @param direction direction to look to refuel.
 function returnToRefuelingStation(direction)
     local worked = true
+    direction = direction or REFUELING_STATION_COORDS[4]
     worked = worked and moveTo(REFUELING_STATION_COORDS[1],REFUELING_STATION_COORDS[2],REFUELING_STATION_COORDS[3])
     worked = worked and turnTo(direction)
     return worked

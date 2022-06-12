@@ -41,7 +41,7 @@ end
 function digArea(n_x, n_y, n_z, offset_y, goToStartForInterrupts)
     offset_y = offset_y or 0
     --Automatically go to job start before going to refuel/unload
-    goToStartForInterrupts = goToStartForInterrupts~=nil and goToStartForInterrupts or true
+    if goToStartForInterrupts==nil then goToStartForInterrupts = true end
     ENABLE_MINING_FOR_MOVING = true --Set this to true to make the turtle mine for this function only
     assert(moveVertically(offset_y) == 0, "Did not move all the way vertically.")
     jobStart = {currentX, currentY, currentZ}

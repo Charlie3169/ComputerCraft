@@ -152,27 +152,14 @@ function moveTo(X, Y, Z, x, y, z)
         thisLoopZ = n_z        
     
         if n_x ~= 0 then --trying to move in the x direction
-            if (currentDirectionIndex == TURTLE_DIRECTION_NEG_X and n_x > 0) or (currentDirectionIndex == TURTLE_DIRECTION_POS_X and n_x < 0) then
-                enhancedLeft()
-                enhancedLeft()
-            elseif (currentDirectionIndex == TURTLE_DIRECTION_POS_Z and n_x > 0) or (currentDirectionIndex == TURTLE_DIRECTION_NEG_Z and n_x < 0) then
-                enhancedLeft()
-            elseif (currentDirectionIndex == TURTLE_DIRECTION_POS_Z and n_x < 0) or (currentDirectionIndex == TURTLE_DIRECTION_NEG_Z and n_x > 0) then
-                enhancedRight()       
-            end
+            if n_x > 0 then turnTo(TURTLE_DIRECTION_POS_X)
+            elseif n_x < 0 then turnTo(TURTLE_DIRECTION_NEG_X) end
             n_x = move(n_x)
         end
 
         if n_z ~= 0 then --trying to move in the z direction
-            offset = 0
-            if (currentDirectionIndex == TURTLE_DIRECTION_NEG_Z and n_z > 0) or (currentDirectionIndex == TURTLE_DIRECTION_POS_Z and n_z < 0) then
-                enhancedLeft()
-                enhancedLeft()    
-            elseif (currentDirectionIndex == TURTLE_DIRECTION_POS_X and n_z < 0) or (currentDirectionIndex == TURTLE_DIRECTION_NEG_X and n_z > 0) then
-                enhancedLeft()
-            elseif (currentDirectionIndex == TURTLE_DIRECTION_POS_X and n_z > 0) or (currentDirectionIndex == TURTLE_DIRECTION_NEG_X and n_z < 0) then
-                enhancedRight()          
-            end
+            if n_z > 0 then turnTo(TURTLE_DIRECTION_POS_Z)
+            elseif n_z < 0 then turnTo(TURTLE_DIRECTION_NEG_Z) end
             n_z = move(n_z)
         end
 
@@ -272,18 +259,36 @@ function enhancedDown()
     return worked   
 end
 
+--Turns to direction. Should use the constants defined at the top.
+function turnTo(direction)
+    local diff = direction - currentDirectionIndex
+    if diff == -3 then enhancedRight()
+    elseif diff = 3 then enhancedLeft() end
+    
+    while diff > 0 do
+        enhancedRight()
+        diff = diff - 1
+    end
+    while diff < 0 do
+        enhancedLeft()
+        diff = diff + 1
+    end
+end    
+
+
 function getCurrentCoordinates()
     --getCoords using a call to the central satellite 
     --set current X Y and Z
 end
 
 
-function returnToUnloadingStation()
+-- @param direction direction to look to unload.
+function returnToUnloadingStation(direction)
     moveTo(UNLOADING_STATION_COORDS[1],UNLOADING_STATION_COORDS[2],UNLOADING_STATION_COORDS[3] )
 end
 
-
-function returnToRefuelingStation()
+-- @param direction direction to look to refuel.
+function returnToRefuelingStation(direction)
     moveTo(REFUELING_STATION_COORDS[1],REFUELING_STATION_COORDS[2],REFUELING_STATION_COORDS[3])
 end
 

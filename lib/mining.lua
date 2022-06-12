@@ -39,7 +39,7 @@ end
 -- @param n_z number of blocks in the z direction to mine
 -- @param offset_y number of blocks to go in the y direction before starting
 function digArea(n_x, n_y, n_z, offset_y, goToStartForInterrupts)
-    offset_y = offset_y~=nil and offset_y or 0
+    offset_y = offset_y or 0
     --Automatically go to job start before going to refuel/unload
     goToStartForInterrupts = goToStartForInterrupts~=nil and goToStartForInterrupts or true
     ENABLE_MINING_FOR_MOVING = true --Set this to true to make the turtle mine for this function only
@@ -77,23 +77,32 @@ end
 --- Function to handle interrupts
 --- For now, just handle out of fuel events and inventory full events
 function handleInterrupts()
+    local worked = true
     local invenFull = isInventoryFull()
     local outOfFuel = needsFuel()
     if invenFull or outOfFuel then
         ENABLE_MINING_FOR_MOVING = false
         jobInterrupt = {currentX, currentY, currentZ}
-        moveTo(jobStart)
-        if invenFull then 
-            returnToUnloadingStation()
-            unloadAll()
+        worked = worked and moveTo(jobStart)
+        assert(worked, "Failed to move to the start of the job") 
+        if invenFull then
+            worked = worked and returnToUnloadingStation()
+            assert(worked, "Failed to move to the unloading station") 
+            worked = worked and unloadAll()
+            assert(worked, "Failed to unload all items.") 
         end
         if outOfFuel then
-            returnToRefuelStation()
-            refuelToHalf()
+            worked = worked and returnToRefuelStation()
+            assert(worked, "Failed to move to the unloading station") 
+            worked = worked and refuelToHalf()
+            assert(worked, "Failed to unload all items.") 
         end
-        moveTo(jobStart)
-        moveVertically(offset_y)
-        moveTo(jobInterrupt)
+        worked = worked and moveTo(jobStart)
+        assert(worked, "Failed to move back to the start of the job") 
+        worked = worked and moveVertically(offset_y)
+        assert(worked, "Failed to move vertically to the offset of the start of the job.") 
+        worked = worked and moveTo(jobInterrupt)
+        assert(worked, "Failed to move to where the job was interrupted.") 
         ENABLE_MINING_FOR_MOVING = true
     end
 end

@@ -185,7 +185,7 @@ function moveTo(X, Y, Z, x, y, z)
 
         stillNeedsToMove = n_x~=0 or n_y~=0 or n_z~=0
     end
-
+    return n_x == 0 and n_z == 0 and n_y == 0
 end
 
 --- Moves a certain number of steps in each direction. 
@@ -273,6 +273,7 @@ function turnTo(direction)
         enhancedLeft()
         diff = diff + 1
     end
+    return currentDirectionIndex == direction
 end    
 
 
@@ -284,12 +285,19 @@ end
 
 -- @param direction direction to look to unload.
 function returnToUnloadingStation(direction)
-    moveTo(UNLOADING_STATION_COORDS[1],UNLOADING_STATION_COORDS[2],UNLOADING_STATION_COORDS[3] )
+    local worked = true
+    worked = worked and moveTo(UNLOADING_STATION_COORDS[1],UNLOADING_STATION_COORDS[2],UNLOADING_STATION_COORDS[3])
+    worked = worked and turnTo(direction)
+    return worked
 end
+
 
 -- @param direction direction to look to refuel.
 function returnToRefuelingStation(direction)
-    moveTo(REFUELING_STATION_COORDS[1],REFUELING_STATION_COORDS[2],REFUELING_STATION_COORDS[3])
+    local worked = true
+    worked = worked and moveTo(REFUELING_STATION_COORDS[1],REFUELING_STATION_COORDS[2],REFUELING_STATION_COORDS[3])
+    worked = worked and turnTo(direction)
+    return worked
 end
 
 

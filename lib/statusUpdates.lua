@@ -21,7 +21,7 @@ end
 
 --- Returns true if every inventory slot is taken up by something
 function isInventoryFull()
-    for i=0,TURTLE_NUMBER_OF_SLOTS,1 do
+    for i=1,TURTLE_NUMBER_OF_SLOTS,1 do
         if turtle.getItemCount(i) == 0 then return false end
     end
     return true

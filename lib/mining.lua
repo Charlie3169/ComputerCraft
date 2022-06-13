@@ -53,10 +53,11 @@ function digArea(n_x, n_y, n_z, offset_y, goToStartForInterrupts)
     while keepMining do
         while move_z ~= 0 do --This loop will do every row except one, so make it move in the x again
             moveSteps(move_x, 0, 0)
-            moveSteps(0, 0, move_z / math.abs(move_z)) --moves 1 unit in the correct z direction
             move_x = -move_x
-            move_z = move_z < 0 and move_z + 1 or move_z - 1
             handleInterrupts(offset_y)
+            moveSteps(0, 0, move_z / math.abs(move_z)) --moves 1 unit in the correct z direction
+            move_z = move_z < 0 and move_z + 1 or move_z - 1
+            
         end
         moveSteps(move_x, 0, 0)
         move_x = -move_x
@@ -76,6 +77,7 @@ end
 
 --- Function to handle interrupts
 --- For now, just handle out of fuel events and inventory full events
+--- TODO Handle bug with not unloading properly, and pathfinding bugs out
 --- @param offset_y (optional) move an offset from the start of the job before pathing
 function handleInterrupts(offset_y)
     local worked = true
@@ -97,7 +99,7 @@ function handleInterrupts(offset_y)
         if outOfFuel then
             worked = worked and returnToRefuelStation()
             assert(worked, "Failed to move to the refueling station") 
-            worked = worked and refuelToHalf()
+            worked = worked and refuel()
             assert(worked, "Failed to refuel.") 
         end
         worked = worked and moveTo(jobStart[1], jobStart[2], jobStart[3])

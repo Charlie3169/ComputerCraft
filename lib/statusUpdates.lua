@@ -50,6 +50,7 @@ function unloadAll()
             end
         end
     end
+    return True
 end
 
 -- Refuel, assuming that the turtle is facing a chest
@@ -67,4 +68,5 @@ function refuel()
 			end
 		end
 	end
+    return True
 end

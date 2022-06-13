@@ -23,6 +23,7 @@ COORDINATES_TRACKED = false
 -- Once we get GPS going we can just correctly initialize them
 
 MOVING_Y_AFTER_X_Z = false --Used when you want the robot to remain the same Y until X and Z are aligned
+OFFSET_Y_BEFORE_MOVING = 10
 ENABLE_MINING_FOR_MOVING = false
 ASSERT_NO_MINING_FOR_MOVING = false --Used when it absolutely shouldn't mine to escape
 
@@ -141,7 +142,13 @@ function moveTo(X, Y, Z, x, y, z)
     assert(z~=nil, "No valid coordinate system. z is null in moveTo(coords).")
     n_x = X - x
     n_y = Y - y
-    n_z = Z - z 
+    n_z = Z - z
+
+    if MOVING_Y_AFTER_X_Z then 
+        moveVertically(OFFSET_Y_BEFORE_MOVING)
+        n_y = n_y - OFFSET_Y_BEFORE_MOVING --Track this to move down later
+    end 
+
 
     stillNeedsToMove = n_x~=0 or n_y~=0 or n_z~=0
 
@@ -164,7 +171,7 @@ function moveTo(X, Y, Z, x, y, z)
         end
 
         if n_y ~= 0 then --trying to move in the y direction
-            if (MOVING_Y_AFTER_X_Z and n_x == 0 and x_z == 0) or not MOVING_Y_AFTER_X_Z then
+            if (MOVING_Y_AFTER_X_Z and n_x == 0 and n_z == 0) or not MOVING_Y_AFTER_X_Z then
                 n_y = moveVertically(n_y)
             end
         end
@@ -263,7 +270,7 @@ end
 function turnTo(direction)
     local diff = direction - currentDirectionIndex
     if diff == -3 then enhancedRight()
-    elseif diff = 3 then enhancedLeft() end
+    elseif diff == 3 then enhancedLeft() end
     
     while diff > 0 do
         enhancedRight()

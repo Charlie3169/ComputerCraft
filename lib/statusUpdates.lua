@@ -96,7 +96,7 @@ function handleInterrupts(offset_y)
             assert(returnToRefuelingStation(), "Failed to move to the refueling station")
             assert(refuel(), "Failed to refuel.") 
         end
-        assert(moveTo(jobStart[1], jobStart[2], jobStart[3]), "Failed to move back to the start of the job") 
+        assert(moveTo(jobStart[1], jobStart[2]-offset_y, jobStart[3]), "Failed to move back to the start of the job") 
         assert(moveVertically(offset_y), "Failed to move vertically to the offset of the start of the job.") 
         assert(moveTo(jobInterrupt[1], jobInterrupt[2], jobInterrupt[3]), "Failed to move to where the job was interrupted.") 
         ENABLE_MINING_FOR_MOVING = wasMiningWhileMoving

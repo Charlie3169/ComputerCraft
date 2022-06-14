@@ -308,15 +308,4 @@ function returnToRefuelingStation(direction)
     worked = worked and moveTo(REFUELING_STATION_COORDS[1],REFUELING_STATION_COORDS[2],REFUELING_STATION_COORDS[3])
     worked = worked and turnTo(direction)
     return worked
-end
-
-
-function distanceInBlocks(x,y,z,X,Y,Z)
-    if X==nil or Y==nil or Z==nil then
-        X,Y,Z = currentX, currentY, currentZ
-    end
-    assert(x~=nil and y~=nil and z~=nil, "Needs all coordinates of where it wants to calculate in distanceInBlocks()")
-    --Turtles can't move diagonally, so just calculate the sum of the differences
-    return math.abs(X-x) + math.abs(Y-y) + math.abs(Z-z)
-end
-        
+end        

@@ -84,27 +84,19 @@ function handleInterrupts(offset_y)
     if invenFull or outOfFuel then
         ENABLE_MINING_FOR_MOVING = false
         jobInterrupt = {currentX, currentY, currentZ}
-        worked = worked and moveTo(jobStart[1], jobStart[2], jobStart[3])
-        assert(worked, "Failed to move to the start of the job") 
+        assert(moveTo(jobStart[1], jobStart[2], jobStart[3]), "Failed to move to the start of the job") 
         if offset_y then moveVertically(-offset_y) end
-        if invenFull then
-            worked = worked and returnToUnloadingStation()
-            assert(worked, "Failed to move to the unloading station") 
-            worked = worked and unloadAll()
-            assert(worked, "Failed to unload all items.") 
+        if invenFull or distanceInBlocksArrays(REFUELING_STATION_COORDS,UNLOADING_STATION_COORDS) < 100 then
+            assert(returnToUnloadingStation(), "Failed to move to the unloading station") 
+            assert(unloadAll(), "Failed to unload all items.") 
         end
         if outOfFuel then
-            worked = worked and returnToRefuelStation()
-            assert(worked, "Failed to move to the refueling station") 
-            worked = worked and refuel()
-            assert(worked, "Failed to refuel.") 
+            assert(returnToRefuelStation(), "Failed to move to the refueling station")
+            assert(refuel(), "Failed to refuel.") 
         end
-        worked = worked and moveTo(jobStart[1], jobStart[2], jobStart[3])
-        assert(worked, "Failed to move back to the start of the job") 
-        worked = worked and moveVertically(offset_y)
-        assert(worked, "Failed to move vertically to the offset of the start of the job.") 
-        worked = worked and moveTo(jobInterrupt[1], jobInterrupt[2], jobInterrupt[3])
-        assert(worked, "Failed to move to where the job was interrupted.") 
+        assert(moveTo(jobStart[1], jobStart[2], jobStart[3]), "Failed to move back to the start of the job") 
+        assert(moveVertically(offset_y), "Failed to move vertically to the offset of the start of the job.") 
+        assert(moveTo(jobInterrupt[1], jobInterrupt[2], jobInterrupt[3]), "Failed to move to where the job was interrupted.") 
         ENABLE_MINING_FOR_MOVING = wasMiningWhileMoving
     end
 end
@@ -130,4 +122,19 @@ function finishJob(offset_y)
         assert(returnToRefuelStation(), "Failed to move to the refueling station") 
         assert(refuel(), "Failed to refuel.") 
     end
+end
+
+
+function distanceInBlocks(x,y,z,X,Y,Z)
+    if X==nil or Y==nil or Z==nil then
+        X,Y,Z = currentX, currentY, currentZ
+    end
+    assert(x~=nil and y~=nil and z~=nil, "Needs all coordinates of where it wants to calculate in distanceInBlocks()")
+    --Turtles can't move diagonally, so just calculate the sum of the differences
+    return math.abs(X-x) + math.abs(Y-y) + math.abs(Z-z)
+end
+
+
+function distanceInBlocksArrays(x,X)
+    return distanceInBlocks(x[1],x[2],x[3],X[1],X[2],X[3])
 end

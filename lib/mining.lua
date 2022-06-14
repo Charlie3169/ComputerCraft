@@ -85,6 +85,7 @@ end
 function digArea(n_x, n_y, n_z, offset_y, goToStartForInterrupts)
     offset_y = offset_y or 0
     local blocksMined = 0
+    turtle.select(1)
     --Automatically go to job start before going to refuel/unload
     if goToStartForInterrupts==nil then goToStartForInterrupts = true end
 
@@ -100,6 +101,7 @@ function digArea(n_x, n_y, n_z, offset_y, goToStartForInterrupts)
             blocksMined = blocksMined + digLine(move_x, DIG_IN_X)[1]
             move_x = -move_x
             handleInterrupts(offset_y)
+            turtle.select(1)
             blocksMined = blocksMined + digLine(move_z / math.abs(move_z), DIG_IN_Z)[1] --moves 1 unit in the correct z direction
             move_z = move_z < 0 and move_z + 1 or move_z - 1   
         end

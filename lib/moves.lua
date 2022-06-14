@@ -270,16 +270,17 @@ end
 function turnTo(direction)
     local diff = direction - currentDirectionIndex
     if diff == -3 then enhancedRight()
-    elseif diff == 3 then enhancedLeft() end
-    
-    while diff > 0 do
-        enhancedRight()
-        diff = diff - 1
-    end
-    while diff < 0 do
-        enhancedLeft()
-        diff = diff + 1
-    end
+    elseif diff == 3 then enhancedLeft() 
+    else 
+        while diff > 0 do
+            enhancedRight()
+            diff = diff - 1
+        end
+        while diff < 0 do
+            enhancedLeft()
+            diff = diff + 1
+        end
+    end 
     return currentDirectionIndex == direction
 end    
 

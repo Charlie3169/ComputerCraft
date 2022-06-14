@@ -45,12 +45,12 @@ function unloadAll()
     for i=1,TURTLE_NUMBER_OF_SLOTS,1 do
         turtle.select(i)
         if not TURTLE_DONT_UNLOAD_SLOTS[i] then
-            while not turtle.drop() and turtle.getItemCount() > 0 do 
+            while turtle.getItemCount() > 0 and not turtle.drop() do 
                 --TODO Add logic here to go to another chest if the one in front is full
             end
         end
     end
-    return True
+    return true
 end
 
 -- Refuel, assuming that the turtle is facing a chest
@@ -68,5 +68,5 @@ function refuel()
 			end
 		end
 	end
-    return True
+    return true
 end

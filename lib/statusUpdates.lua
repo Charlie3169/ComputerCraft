@@ -31,8 +31,7 @@ end
 function needsFuel()
     -- Given the location(s) of a known fuel statiosn, calculate xyz diff from the current location to each one and take the minimum
     -- This would return back an absolute minimum amount of fuel needed under perfect circumstances
-    local distanceFromStation = distanceInBlocks(currentX, currentY, currentZ,
-            REFUELING_STATION_COORDS[1], REFUELING_STATION_COORDS[2], REFUELING_STATION_COORDS[3])
+    local distanceFromStation = distanceInBlocksArrays(jobStart, REFUELING_STATION_COORDS)
     if(distanceFromStation * 2 > turtle.getFuelLevel()) then
         return true
     end

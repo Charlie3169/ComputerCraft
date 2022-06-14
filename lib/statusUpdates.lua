@@ -57,13 +57,14 @@ end
 function refuel()
     bool,x = turtle.inspect()
     assert(x["name"] == "minecraft:chest", "Did not detect a chest, will not refuel.")
-    turtle.select(TURTLE_FUEL_SLOT)
-	turtle.suck(64 - turtle.getItemCount(14))
+    if turtle.getItemCount(TURTLE_FUEL_SLOT) == 0 then turtle.select(TURTLE_FUEL_SLOT)
+    else TURTLE_FUEL_SLOT = TURTLE_FUEL_SLOT - 1 end --make this more robust
+	turtle.suck(64 - turtle.getItemCount(TURTLE_FUEL_SLOT))
 
 	--Refuel using designated charcoal slot
 	if turtle.getFuelLevel() ~= "unlimited" then
 		if turtle.getFuelLimit() then
-			while turtle.getFuelLevel() < turtle.getFuelLimit() and turtle.getItemCount(14) > 1 do
+			while turtle.getFuelLevel() < turtle.getFuelLimit() and turtle.getItemCount(TURTLE_FUEL_SLOT) > 1 do
 				turtle.refuel(1)
 			end
 		end

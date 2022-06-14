@@ -1,4 +1,4 @@
-package.path = package.path .. ";../lib/mining.lua"
+package.path = package.path .. ";../lib/?.lua"
 require('mining')
 
 UNLOADING_STATION_COORDS = {-657,119,731,3}

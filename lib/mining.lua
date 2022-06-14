@@ -71,49 +71,6 @@ function digArea(n_x, n_y, n_z, offset_y, goToStartForInterrupts)
         --The move_x variable will be correct at this point, so just reverse the z
         move_z = math.pow(-1, (n_y - move_y) % 2) * n_z --Reversing it every y layer
     end
-    ENABLE_MINING_FOR_MOVING = false
+    finishJob(offset_y)
 end
-
-
---- Function to handle interrupts
---- For now, just handle out of fuel events and inventory full events
---- TODO Handle bug with not unloading properly, and pathfinding bugs out
---- @param offset_y (optional) move an offset from the start of the job before pathing
-function handleInterrupts(offset_y)
-    local worked = true
-    local wasMiningWhileMoving = ENABLE_MINING_FOR_MOVING
-    local invenFull = isInventoryFull()
-    local outOfFuel = needsFuel()
-    if invenFull or outOfFuel then
-        ENABLE_MINING_FOR_MOVING = false
-        jobInterrupt = {currentX, currentY, currentZ}
-        worked = worked and moveTo(jobStart[1], jobStart[2], jobStart[3])
-        assert(worked, "Failed to move to the start of the job") 
-        if offset_y then moveVertically(-offset_y) end
-        if invenFull then
-            worked = worked and returnToUnloadingStation()
-            assert(worked, "Failed to move to the unloading station") 
-            worked = worked and unloadAll()
-            assert(worked, "Failed to unload all items.") 
-        end
-        if outOfFuel then
-            worked = worked and returnToRefuelStation()
-            assert(worked, "Failed to move to the refueling station") 
-            worked = worked and refuel()
-            assert(worked, "Failed to refuel.") 
-        end
-        worked = worked and moveTo(jobStart[1], jobStart[2], jobStart[3])
-        assert(worked, "Failed to move back to the start of the job") 
-        worked = worked and moveVertically(offset_y)
-        assert(worked, "Failed to move vertically to the offset of the start of the job.") 
-        worked = worked and moveTo(jobInterrupt[1], jobInterrupt[2], jobInterrupt[3])
-        assert(worked, "Failed to move to where the job was interrupted.") 
-        ENABLE_MINING_FOR_MOVING = wasMiningWhileMoving
-    end
-end
-
-
-
-
-
         

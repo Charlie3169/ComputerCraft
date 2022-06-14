@@ -91,7 +91,7 @@ function handleInterrupts(offset_y)
             assert(unloadAll(), "Failed to unload all items.") 
         end
         if outOfFuel then
-            assert(returnToRefuelStation(), "Failed to move to the refueling station")
+            assert(returnToRefuelingStation(), "Failed to move to the refueling station")
             assert(refuel(), "Failed to refuel.") 
         end
         assert(moveTo(jobStart[1], jobStart[2], jobStart[3]), "Failed to move back to the start of the job") 
@@ -119,7 +119,7 @@ function finishJob(offset_y)
 
     --Refuel if needed
     if outOfFuel then
-        assert(returnToRefuelStation(), "Failed to move to the refueling station") 
+        assert(returnToRefuelingStation(), "Failed to move to the refueling station") 
         assert(refuel(), "Failed to refuel.") 
     end
 end

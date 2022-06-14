@@ -11,10 +11,11 @@ DIG_IN_Z = 2
 --- @param doMineDown (optional) mines below while traversing
 --- @return {number of blocks mined, mined straight, mined above, mined below}
 function digLine(length, direction, doMineUp, doMineDown)
-    if direction ~= DIG_IN_X or direction ~= DIG_IN_Z then return {-1,0,0,0}
+    if direction ~= DIG_IN_X and direction ~= DIG_IN_Z then return {-1,0,0,0} end
     if length < 0 then
         if direction == DIG_IN_X then turnTo(TURTLE_DIRECTION_NEG_X)
         elseif direction == DIG_IN_Z then turnTo(TURTLE_DIRECTION_NEG_Z) end
+        length = -length
     else 
         if direction == DIG_IN_X then turnTo(TURTLE_DIRECTION_POS_X)
         elseif direction == DIG_IN_Z then turnTo(TURTLE_DIRECTION_POS_Z) end
@@ -53,21 +54,21 @@ function digVertically(length)
     for i=1,length,1 do
         if turtle.detectUp() and turtle.digUp() then 
             blocksMined = blocksMined + 1 
-            while not enhancedUp() and not turtle.attackUp() do 
-                sleep(0.5)
-            end
+        end
+        while not enhancedUp() and not turtle.attackUp() do 
+            sleep(0.5)
         end
     end
 
     for i=-1,length,-1 do
         if turtle.detectDown() and turtle.digDown() then 
             blocksMined = blocksMined + 1 
-            while not enhancedDown() and not turtle.attackDown() do 
-                bool,x = turtle.inspectDown()
-                if x["name"] == "minecraft:bedrock" then break end
-                sleep(0.5)
-            end
         end
+        while not enhancedDown() and not turtle.attackDown() do 
+            bool,x = turtle.inspectDown()
+            if x["name"] == "minecraft:bedrock" then break end
+            sleep(0.5)
+        end    
     end
 
     return blocksMined

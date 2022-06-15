@@ -1,8 +1,8 @@
 package.path = package.path .. ";../lib/?.lua"
 require('mining')
 
-UNLOADING_STATION_COORDS = {-676,130,749,TURTLE_DIRECTION_POS_X}
-REFUELING_STATION_COORDS = {-678,130,749,TURTLE_DIRECTION_NEG_X}
+UNLOADING_STATION_COORDS = {-662,123,729,TURTLE_DIRECTION_NEG_Z}
+REFUELING_STATION_COORDS = {-662,123,729,TURTLE_DIRECTION_POS_Z}
 
 currentX = -653
 currentY = 120
@@ -16,7 +16,7 @@ ASSERT_NO_MINING_FOR_MOVING = false --Used when it absolutely shouldn't mine to 
 
 SLEEP_SECS_FOR_MOVING = 1
 
-targetDig = {-653,119,731}
+targetDig = {-653,119,742}
 
 moveTo(targetDig[1],targetDig[2],targetDig[3])
-digArea(2,-1,2,-1)
+digArea(35,-30,35,-15)

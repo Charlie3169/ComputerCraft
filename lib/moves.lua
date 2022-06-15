@@ -172,7 +172,7 @@ function moveTo(X, Y, Z, x, y, z)
             n_z = move(n_z)
         end
 
-        if n_y ~= 0 then --trying to move in the y direction
+        if n_y ~= 0 or MOVING_Y_AFTER_X_Z then --trying to move in the y direction
             if (MOVING_Y_AFTER_X_Z and n_x == 0 and n_z == 0) or not MOVING_Y_AFTER_X_Z then
                 n_y = moveVertically(n_y)
 	    elseif (MOVING_Y_AFTER_X_Z and thisLoopX == n_x and thisLoopZ == n_z) then

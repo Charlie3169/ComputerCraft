@@ -32,9 +32,12 @@ function needsFuel()
     -- Given the location(s) of a known fuel statiosn, calculate xyz diff from the current location to each one and take the minimum
     -- This would return back an absolute minimum amount of fuel needed under perfect circumstances
     local distanceFromStation = 0 
-    if jobStart[1] ~= 0 or jobStart[2] ~= 0 or jobStart[3] ~= 0 then distanceFromStation = distanceInBlocksArrays(jobStart, REFUELING_STATION_COORDS)
-    else distanceFromStation = distanceInBlocksArrays(currentX, currentY, currentZ, REFUELING_STATION_COORDS[1], REFUELING_STATION_COORDS[2], REFUELING_STATION_COORDS[3])end
-    if(distanceFromStation * 2 > turtle.getFuelLevel()) then
+    if jobStart[1] ~= 0 or jobStart[2] ~= 0 or jobStart[3] ~= 0 then 
+        	local distanceFromStart = distanceInBlocksArrays({currentX, currentY, currentZ}, jobStart)
+		distanceFromStation = distanceFromStart + distanceInBlocksArrays(jobStart, REFUELING_STATION_COORDS)
+    else distanceFromStation = distanceInBlocksArrays({currentX, currentY, currentZ}, REFUELING_STATION_COORDS) end
+	
+    if(distanceFromStation * 3 > turtle.getFuelLevel()) then
         return true
     end
     return false
@@ -51,6 +54,7 @@ function unloadAll()
             end
         end
     end
+	turtle.select(1)
     return true
 end
 
@@ -65,8 +69,8 @@ function refuel()
 	--Refuel using designated charcoal slot
 	if turtle.getFuelLevel() ~= "unlimited" then
 		if turtle.getFuelLimit() then
-			while turtle.getFuelLevel() < turtle.getFuelLimit() and turtle.getItemCount(TURTLE_FUEL_SLOT) > 1 do
-				turtle.refuel(1)
+			if turtle.getFuelLevel() < turtle.getFuelLimit() and turtle.getItemCount(TURTLE_FUEL_SLOT) > 0 then
+				turtle.refuel(turtle.getItemCount(TURTLE_FUEL_SLOT))
 			end
 		end
 	end

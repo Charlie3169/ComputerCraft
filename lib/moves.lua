@@ -135,6 +135,7 @@ end
 --- @param (optional) z: starting z coordinate
 function moveTo(X, Y, Z, x, y, z)
 	local wasMovingBefore = MOVING_Y_AFTER_X_Z
+	local wasMiningBefore = ENABLE_MINING_FOR_MOVING
     x = x~=nil and x or (COORDINATES_TRACKED and currentX or x)
     y = y~=nil and y or (COORDINATES_TRACKED and currentY or y) 
     z = z~=nil and z or (COORDINATES_TRACKED and currentZ or z)
@@ -174,7 +175,7 @@ function moveTo(X, Y, Z, x, y, z)
         if n_y ~= 0 then --trying to move in the y direction
             if (MOVING_Y_AFTER_X_Z and n_x == 0 and n_z == 0) or not MOVING_Y_AFTER_X_Z then
                 n_y = moveVertically(n_y)
-		else if (MOVING_Y_AFTER_X_Z and thisLoopX == n_x and thisLoopZ == n_z) then
+	    elseif (MOVING_Y_AFTER_X_Z and thisLoopX == n_x and thisLoopZ == n_z) then
 			moveVertically(OFFSET_Y_BEFORE_MOVING)
        			n_y = n_y - OFFSET_Y_BEFORE_MOVING --Track this to move down later
             end
@@ -196,6 +197,8 @@ function moveTo(X, Y, Z, x, y, z)
 
         stillNeedsToMove = n_x~=0 or n_y~=0 or n_z~=0
     end
+    MOVING_Y_AFTER_X_Z = wasMovingBefore
+    ENABLE_MINING_FOR_MOVING = wasMiningBefore
     return n_x == 0 and n_z == 0 and n_y == 0
 end
 

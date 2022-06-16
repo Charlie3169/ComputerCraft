@@ -1,6 +1,8 @@
 -- The zone where we don't want turtles to mine
 -- Format is x,y,z,X,Y,Z and should be from one corner to another
 HOME_ZONE_COORDS = {0, 0, 0, 1, 1, 1}
+UNLOADING_STATION_COORDS = {0,0,0,0} --x,y,z,directionToPoint
+REFUELING_STATION_COORDS = {0,0,0,0} --x,y,z,directionToPoint
 
 --- This function populates HOME_ZONE_COORDS given the initial parameters.
 --- Enforces that x < X, y < Y, z < Z after calculations.
